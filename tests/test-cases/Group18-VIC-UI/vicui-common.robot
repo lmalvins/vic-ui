@@ -241,11 +241,12 @@ Install VIC Product OVA
 
     # set the local path to ova global
     Set Global Variable  ${ova_local_path}  /vic/${ova-name}
-
+    Log To Console  Setting GOVC environment variables stage...\n
     Set Environment Variable  GOVC_URL  ${target-vc-ip}
     Set Environment Variable  GOVC_INSECURE  1
     Set Environment Variable  GOVC_USERNAME  administrator@vsphere.local
     Set Environment Variable  GOVC_PASSWORD  Bl*ckwalnut0
+    Log To Console  Checking if OVA is already present on vcenter...\n
     ${rc}  ${ova_ip}=  Run And Return Rc And Output  govc vm.ip -dc=Datacenter ${ova-name}
     ${ova_found}=  Run Keyword And Return Status  Should Be True  ${rc} == 0
 
@@ -254,6 +255,7 @@ Install VIC Product OVA
     Return From Keyword If  ${ova_found}
 
     # check if OVA file is locally available already and download if there's none
+    Log To Console  Checking if OVA file is present locally...\n
     ${ova_exists}=  Run Keyword And Return Status  OperatingSystem.File Should Exist  ${ova_local_path}
     Run Keyword If  ${ova_exists}  Log To Console  OVA file is already found at ${ova_local_path}
     Run Keyword Unless  ${ova_exists}  Download VIC OVA  ${ova_url}  ${ova_local_path}
