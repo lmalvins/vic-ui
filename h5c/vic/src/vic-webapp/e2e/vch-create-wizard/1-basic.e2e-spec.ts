@@ -61,7 +61,9 @@ describe('VCH Create Wizard - Basic', () => {
 
   it('should redirect to login', () => {
     // browser.driver.manage().window().maximize();
-    browser.driver.manage().window().setSize(width, heigth);
+    console.log(width + ' \n');
+    console.log(heigth);
+    browser.driver.manage().window().setSize(1024, 768);
     page.navigateTo();
     expect(browser.getCurrentUrl()).toContain('SSO');
   });
