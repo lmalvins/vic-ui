@@ -63,7 +63,7 @@ describe('VCH Create Wizard - Basic', () => {
     // browser.driver.manage().window().maximize();
     console.log(width + ' \n');
     console.log(heigth);
-    browser.driver.manage().window().setSize(1280, 1024);
+    browser.driver.manage().window().setSize(1366, 768);
     browser.driver.manage().window().setPosition(0, 0);
 
     page.navigateTo();
