@@ -35,15 +35,20 @@ import {
   menuLabel,
   tabSummary
 } from './common';
+import { Driver } from 'selenium-webdriver/ie';
 
 describe('VCH Create Wizard - Basic', () => {
   jasmine.DEFAULT_TIMEOUT_INTERVAL = PROTRACTOR_JASMINE_TIMEOUT;
   let page: VicWebappPage;
   let specRunId: number;
+  let width: number;
+  let heigth: number;
   specRunId = Math.floor(Math.random() * 1000) + 100;
 
   beforeAll(() => {
     specRunId = Math.floor(Math.random() * 1000) + 100;
+    width = screen.availWidth;
+    heigth = screen.availHeight;
   });
 
   beforeEach(() => {
@@ -55,7 +60,8 @@ describe('VCH Create Wizard - Basic', () => {
   });
 
   it('should redirect to login', () => {
-    browser.driver.manage().window().maximize();
+    // browser.driver.manage().window().maximize();
+    browser.driver.manage().window().setSize(width, heigth);
     page.navigateTo();
     expect(browser.getCurrentUrl()).toContain('SSO');
   });
@@ -63,7 +69,6 @@ describe('VCH Create Wizard - Basic', () => {
   it('should login', () => {
     page.login();
     page.waitLoginFinish();
-    browser.driver.manage().window().maximize();
     expect(browser.getCurrentUrl()).toContain('/ui');
   });
 
