@@ -64,6 +64,8 @@ describe('VCH Create Wizard - Basic', () => {
     console.log(width + ' \n');
     console.log(heigth);
     browser.driver.manage().window().setSize(1280, 1024);
+    browser.driver.manage().window().setPosition(0, 0);
+
     page.navigateTo();
     expect(browser.getCurrentUrl()).toContain('SSO');
   });
