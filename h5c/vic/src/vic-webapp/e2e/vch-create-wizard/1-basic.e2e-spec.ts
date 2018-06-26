@@ -63,6 +63,7 @@ describe('VCH Create Wizard - Basic', () => {
   it('should login', () => {
     page.login();
     page.waitLoginFinish();
+    browser.driver.manage().window().maximize();
     expect(browser.getCurrentUrl()).toContain('/ui');
   });
 
