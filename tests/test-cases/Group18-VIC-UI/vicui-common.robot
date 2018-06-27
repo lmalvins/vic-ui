@@ -240,8 +240,8 @@ Install VIC Product OVA
     Set Global Variable  ${ova_name}  ${ova-name}
 
     # set the local path to ova global
-    Set Global Variable  ${ova_local_path}  /vic/${ova-name}
-
+    Run  mkdir -p /vic/${buildnum}-%{VC_BUILD_NO}
+    Set Global Variable  ${ova_local_path}  /vic/${buildnum}-%{VC_BUILD_NO}/${ova-name}
     Set Environment Variable  GOVC_URL  ${target-vc-ip}
     Set Environment Variable  GOVC_INSECURE  1
     Set Environment Variable  GOVC_USERNAME  administrator@vsphere.local
