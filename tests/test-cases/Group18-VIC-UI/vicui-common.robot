@@ -354,15 +354,15 @@ Register VIC Machine Server CA With Windows
     [Arguments]  ${ova_ip}
     Log To Console  \nDownloading Root CA for VIC Machine server...
     Open SSH Connection  ${ova_ip}  root  Bl*ckwalnut0
-    ${out}  ${rc}=  Execute Command  docker cp vic-machine-server:/certs/ca.crt /tmp/vic-machine-server-ca.crt  return_rc=True
-    SSHLibrary.Get File  /tmp/vic-machine-server-ca.crt  /tmp/
+    ${out}  ${rc}=  Execute Command  docker cp vic-machine-server:/certs/ca.crt /tmp/vic-machine-server-ca-${buildnum}-%{VC_BUILD_NO}.crt  return_rc=True
+    SSHLibrary.Get File  /tmp/vic-machine-server-ca-${buildnum}-%{VC_BUILD_NO}.crt  /tmp/
     Close Connection
 
     # delete previously registered CA
     Delete VIC Machine Server CA
 
     OperatingSystem.File Should Exist  /tmp/vic-machine-server-ca.crt
-    Register Root CA Certificate With Windows  /tmp/vic-machine-server-ca.crt
+    Register Root CA Certificate With Windows  /tmp/vic-machine-server-ca-${buildnum}-%{VC_BUILD_NO}.crt
 
 Delete VIC Machine Server CA
     Open SSH Connection  ${WINDOWS_HOST_IP}  ${WINDOWS_HOST_USER}  ${WINDOWS_HOST_PASSWORD}
