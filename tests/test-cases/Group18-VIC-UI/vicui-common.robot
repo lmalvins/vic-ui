@@ -271,7 +271,7 @@ Install VIC Product OVA
 
     Log To Console  \nWaiting for Getting Started Page to Come Up...
     :FOR  ${i}  IN RANGE  24
-    \   ${rc}  ${out}=  Run And Return Rc And Output  curl -k -w "\%{http_code}\\n" --header "Content-Type: application/json" -X POST --data '{"target":"${target-vc-ip}:443","user":"administrator@vsphere.local","password":"Bl*ckwalnut0"}' https://%{OVA_IP_${buildnum}}:9443/register 2>/dev/null
+    \   ${rc}  ${out}=  Run And Return Rc And Output  curl -k -w "\%{http_code}\\n" --header "Content-Type: application/json" -X POST --data '{"target":"${target-vc-ip}:443","user":"administrator@vsphere.local","password":"Bl*ckwalnut0"}' https://%{OVA_IP_%{BUILD_NUMBER}}:9443/register 2>/dev/null
     \   Exit For Loop If  '200' in '''${out}'''
     \   Sleep  5s
     Log To Console  ${rc}
