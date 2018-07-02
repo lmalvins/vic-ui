@@ -353,15 +353,15 @@ Register VIC Machine Server CA With Windows
     [Arguments]  ${ova_ip}
     Log To Console  \nDownloading Root CA for VIC Machine server...
     Open SSH Connection  ${ova_ip}  root  Bl*ckwalnut0
-    ${out}  ${rc}=  Execute Command  docker cp vic-machine-server:/certs/ca.crt /tmp/vic-machine-server-ca-${buildnum}-%{VC_BUILD_NO}.crt  return_rc=True
-    SSHLibrary.Get File  /tmp/vic-machine-server-ca-${buildnum}-%{VC_BUILD_NO}.crt  /tmp/
+    ${out}  ${rc}=  Execute Command  docker cp vic-machine-server:/certs/ca.crt /tmp/vic-machine-server-ca-%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt  return_rc=True
+    SSHLibrary.Get File  /tmp/vic-machine-server-ca-%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt  /tmp/
     Close Connection
 
     # delete previously registered CA
     Delete VIC Machine Server CA
 
     OperatingSystem.File Should Exist  /tmp/vic-machine-server-ca.crt
-    Register Root CA Certificate With Windows  /tmp/vic-machine-server-ca-${buildnum}-%{VC_BUILD_NO}.crt
+    Register Root CA Certificate With Windows  /tmp/vic-machine-server-ca-%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt
 
 Delete VIC Machine Server CA
     Open SSH Connection  ${WINDOWS_HOST_IP}  ${WINDOWS_HOST_USER}  ${WINDOWS_HOST_PASSWORD}
@@ -382,17 +382,17 @@ Delete VC Root CA
 Register VC CA Cert With Windows
     [Arguments]  ${vc_fqdn}
     Log To Console  \nDownloading Root CA from VC...
-    ${file}=  Evaluate  '/tmp/vc_ca_%{BUILD_NUMBER}.zip'
+    ${file}=  Evaluate  '/tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}.zip'
     ${rc}=  Run And Return Rc  curl -sLk -o ${file} https://${vc_fqdn}/certs/download.zip
     Should Be Equal As Integers  ${rc}  0
     Run  unzip -od /tmp/ ${file}
-    ${rc}  ${out}=  Run And Return Rc And Output  find /tmp/certs/win/*.crt -exec mv {} /tmp/certs/win/vc_ca_cert.crt \\;
+    ${rc}  ${out}=  Run And Return Rc And Output  find /tmp/certs/win/*.crt -exec mv {} /tmp/certs/win/vc_ca_cert_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt \\;
     Should Be Equal As Integers  ${rc}  0
 
     # delete previously registered CA
     Delete VC Root CA
 
-    Register Root CA Certificate With Windows  /tmp/certs/win/vc_ca_cert.crt
+    Register Root CA Certificate With Windows  /tmp/certs/win/vc_ca_cert_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt
 
 Run SSHPASS And Log To File
     [Arguments]  ${host}  ${user}  ${password}  ${cmd}  ${logfile}=STDOUT
