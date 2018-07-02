@@ -360,7 +360,7 @@ Register VIC Machine Server CA With Windows
     # delete previously registered CA
     Delete VIC Machine Server CA
 
-    OperatingSystem.File Should Exist  /tmp/vic-machine-server-ca.crt
+    OperatingSystem.File Should Exist  /tmp/vic-machine-server-ca-%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt
     Register Root CA Certificate With Windows  /tmp/vic-machine-server-ca-%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt
 
 Delete VIC Machine Server CA
