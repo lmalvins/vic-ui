@@ -384,6 +384,7 @@ Register VC CA Cert With Windows
     Log To Console  \nDownloading Root CA from VC...
     ${file}=  Evaluate  '/tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}.zip'
     ${rc}=  Run And Return Rc  curl -sLk -o ${file} https://${vc_fqdn}/certs/download.zip
+    Log To Console  \nDownloading cert files ${file} based on https://${vc_fqdn}/certs/download.zip
     Should Be Equal As Integers  ${rc}  0
     Run  unzip -od /tmp/ ${file}
     ${rc}  ${out}=  Run And Return Rc And Output  find /tmp/certs/win/*.crt -exec mv {} /tmp/certs/win/vc_ca_cert_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt \\;
@@ -391,7 +392,8 @@ Register VC CA Cert With Windows
 
     # delete previously registered CA
     Delete VC Root CA
-
+    ${rc}  ${out}=  Run And Return Rc And Output  openssl x509 -in /tmp/certs/win/vc_ca_cert_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt -noout -fingerprint -sha1
+    Log To Console  ${out}
     Register Root CA Certificate With Windows  /tmp/certs/win/vc_ca_cert_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt
 
 Run SSHPASS And Log To File
