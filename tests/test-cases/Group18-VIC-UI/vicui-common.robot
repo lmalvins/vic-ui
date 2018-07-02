@@ -230,7 +230,6 @@ Run GOVC
 
 Install VIC Product OVA
     [Arguments]  ${target-vc-ip}  ${ova-esx-host-ip}  ${ova-esx-datastore}
-    ${buildnum}=  Set Variable  %{BUILD_NUMBER}
     Variable Should Exist  ${ova_url}
     ${ova-name}=  Fetch From Right  ${ova_url}  /
     Log  OVA filename is: ${ova-name}
@@ -240,8 +239,8 @@ Install VIC Product OVA
     Set Global Variable  ${ova_name}  ${ova-name}
 
     # set the local path to ova global
-    Run  mkdir -p /vic/${buildnum}-%{VC_BUILD_NO}
-    Set Global Variable  ${ova_local_path}  /vic/${buildnum}-%{VC_BUILD_NO}/${ova-name}
+    Run  mkdir -p /vic/%{BUILD_NUMBER}-%{VC_BUILD_NO}
+    Set Global Variable  ${ova_local_path}  /vic/%{BUILD_NUMBER}-%{VC_BUILD_NO}/${ova-name}
     Set Environment Variable  GOVC_URL  ${target-vc-ip}
     Set Environment Variable  GOVC_INSECURE  1
     Set Environment Variable  GOVC_USERNAME  administrator@vsphere.local
@@ -250,7 +249,7 @@ Install VIC Product OVA
     ${ova_found}=  Run Keyword And Return Status  Should Be True  ${rc} == 0
 
     # if ova is already found in the target VC, get IP and break out of the keyword
-    Run Keyword If  ${ova_found}  Set Environment Variable  OVA_IP_${buildnum}  ${ova_ip}
+    Run Keyword If  ${ova_found}  Set Environment Variable  OVA_IP_%{BUILD_NUMBER}  ${ova_ip}
     Return From Keyword If  ${ova_found}
 
     # check if OVA file is locally available already and download if there's none
@@ -268,7 +267,7 @@ Install VIC Product OVA
     :FOR  ${line}  IN  @{output}
     \   ${status}=  Run Keyword And Return Status  Should Contain  ${line}  Received IP address:
     \   ${ip}=  Run Keyword If  ${status}  Fetch From Right  ${line}  ${SPACE}
-    \   Run Keyword If  ${status}  Set Environment Variable  OVA_IP_${buildnum}  ${ip}
+    \   Run Keyword If  ${status}  Set Environment Variable  OVA_IP_%{BUILD_NUMBER}  ${ip}
 
     Log To Console  \nWaiting for Getting Started Page to Come Up...
     :FOR  ${i}  IN RANGE  24
@@ -279,7 +278,7 @@ Install VIC Product OVA
     Log To Console  ${out}
     Should Contain  ${out}  200
 
-    Log  %{OVA_IP_${buildnum}}
+    Log  %{OVA_IP_%{BUILD_NUMBER}}
 
 Download VIC OVA
     [Arguments]  ${url}  ${local_path}
