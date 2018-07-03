@@ -382,12 +382,11 @@ Delete VC Root CA
 Register VC CA Cert With Windows
     [Arguments]  ${vc_fqdn}
     Log To Console  \nDownloading Root CA from VC...
-    Run  mkdir -p /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO} && cd /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}
-    Run  pwd 
-    ${rc}=  Run And Return Rc  curl -sLk -o download.zip https://${vc_fqdn}/certs/download.zip
+    Run  mkdir -p /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO} && cd /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO} 
+    ${rc}=  Run And Return Rc  curl -sLk -o /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/download.zip https://${vc_fqdn}/certs/download.zip
     Log To Console  \nDownloading cert files based on https://${vc_fqdn}/certs/download.zip
     Should Be Equal As Integers  ${rc}  0
-    Run  unzip -o /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO} download.zip
+    Run  unzip -od /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO} download.zip
     ${rc}  ${out}=  Run And Return Rc And Output  find /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/certs/win/*.crt -exec mv {} /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/certs/win/vc_ca_cert_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt \\;
     Should Be Equal As Integers  ${rc}  0
 
