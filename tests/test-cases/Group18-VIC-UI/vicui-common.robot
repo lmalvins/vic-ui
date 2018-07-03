@@ -387,7 +387,8 @@ Register VC CA Cert With Windows
     Log To Console  \nDownloading cert files based on https://${vc_fqdn}/certs/download.zip
     Should Be Equal As Integers  ${rc}  0
     Run  cd /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}
-    Run  unzip -od /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO} download.zip
+    Run  pwd
+    Run  unzip download.zip
     ${rc}  ${out}=  Run And Return Rc And Output  find /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/certs/win/*.crt -exec mv {} /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/certs/win/vc_ca_cert_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt \\;
     Should Be Equal As Integers  ${rc}  0
 
