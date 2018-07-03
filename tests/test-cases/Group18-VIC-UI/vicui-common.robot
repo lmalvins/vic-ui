@@ -384,10 +384,10 @@ Register VC CA Cert With Windows
     Log To Console  \nDownloading Root CA from VC...
     Run  mkdir -p /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO} && cd /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}
     Run  pwd 
-    ${rc}=  Run And Return Rc  curl -sL -o https://${vc_fqdn}/certs/download.zip
+    ${rc}=  Run And Return Rc  curl -sLk -o download.zip https://${vc_fqdn}/certs/download.zip
     Log To Console  \nDownloading cert files based on https://${vc_fqdn}/certs/download.zip
     Should Be Equal As Integers  ${rc}  0
-    Run  unzip -o download.zip
+    Run  unzip -o /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO} download.zip
     ${rc}  ${out}=  Run And Return Rc And Output  find /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/certs/win/*.crt -exec mv {} /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/certs/win/vc_ca_cert_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt \\;
     Should Be Equal As Integers  ${rc}  0
 
@@ -396,6 +396,12 @@ Register VC CA Cert With Windows
     ${rc}  ${out}=  Run And Return Rc And Output  openssl x509 -in /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/certs/win/vc_ca_cert_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt -noout -fingerprint -sha1
     Log To Console  ${out}
     Register Root CA Certificate With Windows  /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/certs/win/vc_ca_cert_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt
+
+    # delete previously registered CA
+    # Delete VC Root CA
+    ${rc}  ${out}=  Run And Return Rc And Output  openssl x509 -in /tmp/certs/win/vc_ca_cert_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt -noout -fingerprint -sha1
+    Log To Console  ${out}
+    Register Root CA Certificate With Windows  /tmp/certs/win/vc_ca_cert_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt
 
 Run SSHPASS And Log To File
     [Arguments]  ${host}  ${user}  ${password}  ${cmd}  ${logfile}=STDOUT
