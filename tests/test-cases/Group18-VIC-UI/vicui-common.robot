@@ -383,6 +383,7 @@ Register VC CA Cert With Windows
     [Arguments]  ${vc_fqdn}
     Log To Console  \nDownloading Root CA from VC...
     Run  mkdir -p /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO} && cd /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}
+    Run  pwd 
     ${rc}=  Run And Return Rc  curl -sL -o https://${vc_fqdn}/certs/download.zip
     Log To Console  \nDownloading cert files based on https://${vc_fqdn}/certs/download.zip
     Should Be Equal As Integers  ${rc}  0
