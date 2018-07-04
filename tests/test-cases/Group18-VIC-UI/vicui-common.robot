@@ -399,18 +399,12 @@ Register VC CA Cert With Windows
     [Arguments]  ${vc_fqdn}
     Log To Console  \nDownloading Root CA from VC...
     Run  mkdir -p /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}
-    Log To Console  \nListando archivos dentro de /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO} antes de la descarga de los certs
-    Run  ll /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}
     ${file}=  Evaluate  '/tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}.zip'
     ${rc}=  Run And Return Rc  curl -sLk -o ${file} https://${vc_fqdn}/certs/download.zip
-    Log To Console  \nDownloading cert files based on https://${vc_fqdn}/certs/download.zip
-    Log To Console  \nListando archivos despues de la descarga
-    Run  ll /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO} - File: ${file}    
+    Log To Console  \nDownloading cert files based on https://${vc_fqdn}/certs/download.zip    
     Should Be Equal As Integers  ${rc}  0
     Run  unzip -od /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/ ${file}
-    Log To Console  \nListando archivos despues de descomprimir
-    Run  ll /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO} - File: ${file}
-    ${rc}  ${out}=  Run And Return Rc And Output  find /tmp//certs/win/*.crt -exec mv {} /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/certs/win/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt \\;
+    ${rc}  ${out}=  Run And Return Rc And Output  find /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/certs/win/*.crt -exec mv {} /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/certs/win/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt \\;
     Should Be Equal As Integers  ${rc}  0
 
     # delete previously registered CA
