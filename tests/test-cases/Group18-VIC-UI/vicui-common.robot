@@ -406,16 +406,7 @@ Register VC CA Cert With Windows
     Run  unzip -od /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/ ${file}
     ${rc}  ${out}=  Run And Return Rc And Output  find /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/certs/win/*.crt -exec mv {} /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/certs/win/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt \\;
     Should Be Equal As Integers  ${rc}  0
-
-    # delete previously registered CA
-    # Delete VC Root CA
     ${rc}  ${out}=  Run And Return Rc And Output  openssl x509 -in /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/certs/win/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt -noout -fingerprint -sha1
-    Log To Console  ${out}
-    Register Root CA Certificate With Windows  /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/certs/win/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt
-    # Delete locally files .crt to avoid conflics with single runs - check this
-    # delete previously registered CA
-    Delete VC Root CA
-    ${rc}  ${out}=  Run And Return Rc And Output  openssl x509 -in /tmp/certs/win/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt -noout -fingerprint -sha1
     Log To Console  ${out}
     Register Root CA Certificate With Windows  /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/certs/win/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt
 
