@@ -417,7 +417,7 @@ Register VC CA Cert With Windows
     # Delete VC Root CA
     ${rc}  ${out}=  Run And Return Rc And Output  openssl x509 -in /tmp/certs/win/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt -noout -fingerprint -sha1
     Log To Console  ${out}
-    Register Root CA Certificate With Windows  /tmp/certs/win/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt
+    Register Root CA Certificate With Windows  /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/certs/win/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt
 
 Run SSHPASS And Log To File
     [Arguments]  ${host}  ${user}  ${password}  ${cmd}  ${logfile}=STDOUT
