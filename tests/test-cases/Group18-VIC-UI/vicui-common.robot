@@ -379,30 +379,51 @@ Delete VC Root CA
     Should Be Equal As Integers  ${rc}  0
     Close Connection
 
+#Register VC CA Cert With Windows
+#    [Arguments]  ${vc_fqdn}
+#    Log To Console  \nDownloading Root CA from VC...
+#    ${file}=  Evaluate  '/tmp/vc_ca_%{BUILD_NUMBER}.zip'
+#    ${rc}=  Run And Return Rc  curl -sLk -o ${file} https://${vc_fqdn}/certs/download.zip
+#    Should Be Equal As Integers  ${rc}  0
+#    Run  unzip -od /tmp/ ${file}
+#    ${rc}  ${out}=  Run And Return Rc And Output  find /tmp/certs/win/*.crt -exec mv {} /tmp/certs/win/vc_ca_cert.crt \\;
+#    Should Be Equal As Integers  ${rc}  0
+
+    # delete previously registered CA
+#    Delete VC Root CA
+
+#    Register Root CA Certificate With Windows  /tmp/certs/win/vc_ca_cert.crt
+
+
 Register VC CA Cert With Windows
     [Arguments]  ${vc_fqdn}
     Log To Console  \nDownloading Root CA from VC...
-    Run  mkdir -p /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}     
-    ${rc}=  Run And Return Rc  curl -sLk -o /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/download.zip https://${vc_fqdn}/certs/download.zip
+    Run  mkdir -p /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}
+    Log To Console  \nListando archivos dentro de /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO} antes de la descarga de los certs
+    Run  ll /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}
+    ${file}=  Evaluate  '/tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}.zip'
+    ${rc}=  Run And Return Rc  curl -sLk -o ${file} https://${vc_fqdn}/certs/download.zip
     Log To Console  \nDownloading cert files based on https://${vc_fqdn}/certs/download.zip
+    Log To Console  \nListando archivos despues de la descarga
+    Run  ll /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO} - File: ${file}    
     Should Be Equal As Integers  ${rc}  0
-    Run  cd /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}
-    Run  pwd
-    Run  unzip download.zip
-    ${rc}  ${out}=  Run And Return Rc And Output  find /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/certs/win/*.crt -exec mv {} /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/certs/win/vc_ca_cert_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt \\;
+    Run  unzip -od /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/ ${file}
+    Log To Console  \nListando archivos despues de descomprimir
+    Run  ll /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO} - File: ${file}
+    ${rc}  ${out}=  Run And Return Rc And Output  find /tmp//certs/win/*.crt -exec mv {} /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/certs/win/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt \\;
     Should Be Equal As Integers  ${rc}  0
 
     # delete previously registered CA
     # Delete VC Root CA
-    ${rc}  ${out}=  Run And Return Rc And Output  openssl x509 -in /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/certs/win/vc_ca_cert_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt -noout -fingerprint -sha1
+    ${rc}  ${out}=  Run And Return Rc And Output  openssl x509 -in /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/certs/win/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt -noout -fingerprint -sha1
     Log To Console  ${out}
-    Register Root CA Certificate With Windows  /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/certs/win/vc_ca_cert_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt
-
+    Register Root CA Certificate With Windows  /tmp/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}/certs/win/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt
+    # Delete locally files .crt to avoid conflics with single runs - check this
     # delete previously registered CA
     # Delete VC Root CA
-    ${rc}  ${out}=  Run And Return Rc And Output  openssl x509 -in /tmp/certs/win/vc_ca_cert_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt -noout -fingerprint -sha1
+    ${rc}  ${out}=  Run And Return Rc And Output  openssl x509 -in /tmp/certs/win/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt -noout -fingerprint -sha1
     Log To Console  ${out}
-    Register Root CA Certificate With Windows  /tmp/certs/win/vc_ca_cert_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt
+    Register Root CA Certificate With Windows  /tmp/certs/win/vc_ca_%{BUILD_NUMBER}-%{VC_BUILD_NO}.crt
 
 Run SSHPASS And Log To File
     [Arguments]  ${host}  ${user}  ${password}  ${cmd}  ${logfile}=STDOUT
